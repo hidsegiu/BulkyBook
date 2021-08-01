@@ -32,9 +32,25 @@ namespace BulkyBook
             services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders()
                    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddSingleton<IEmailSender, EmailSender>();
+            services.Configure<EmailOptions>(Configuration);
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
+            services.AddAuthentication().AddFacebook(options =>
+            {
+                options.AppId = "384470049913132";
+                options.AppSecret = "2afba19d2a803bbc752a00387f46242b";
+            });services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = "164142227175-a37bcf0sc4so1mvnooipbtvkb66hdlra.apps.googleusercontent.com";
+                options.ClientSecret = "jgsKnrHwdqdi8_-GRjfvhwT3";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
